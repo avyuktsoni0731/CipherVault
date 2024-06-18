@@ -51,16 +51,16 @@ export default function CryptoNav() {
       setProfilePicture(profilePicture);
       setUserName(userName);
 
-      fetch("https://vitalwebapp.onrender.com/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          googleUserId: emailId,
-          sessionStatus: session.status,
-        }),
-      });
+      //   fetch("https://vitalwebapp.onrender.com/api/login", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       googleUserId: emailId,
+      //       sessionStatus: session.status,
+      //     }),
+      //   });
     }
   }, [session.status]);
 
@@ -89,7 +89,7 @@ export default function CryptoNav() {
           />
           <NavbarBrand>
             {/* <Image src={VitalLogo} alt="vital-logo" /> */}
-            <p className="font-bold text-inherit">VITAL</p>
+            <p className="font-bold text-inherit">CryptoDrive</p>
           </NavbarBrand>
         </NavbarContent>
 
