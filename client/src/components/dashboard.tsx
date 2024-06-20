@@ -14,6 +14,8 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 
+import { Files } from "./files";
+
 export function Dashboard() {
   const session = useSession();
 
@@ -21,47 +23,42 @@ export function Dashboard() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [userName, setUserName] = useState("");
+  const [showFiles, setShowFiles] = useState(false);
 
-  useEffect(() => {
-    if (session.status === "unauthenticated") {
-      setIsSignedIn(false);
+  const handleLoginClick = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8080/login", {
+        method: "GET",
+      });
 
-      //   fetch("http://127.0.0.1:5000/api/login", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       sessionStatus: session.status,
-      //     }),
-      //   });
+      if (response.ok) {
+        setIsSignedIn(true);
+        setShowFiles(true);
+        console.log("logged in");
+      } else {
+        console.log("login failed");
+      }
+    } catch (error) {
+      console.error("error logging in:", error);
     }
-    if (session.status === "authenticated") {
-      setIsSignedIn(true);
-      const profilePicture = session.data.user.image;
-      const userName = session.data.user.name;
-      const emailId = session.data.user.email;
-      setProfilePicture(profilePicture);
-      setUserName(userName);
-
-      //   fetch("https://vitalwebapp.onrender.com/api/login", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       googleUserId: emailId,
-      //       sessionStatus: session.status,
-      //     }),
-      //   });
-    }
-  }, [session.status]);
-
-  const login = async () => {
-    signIn("google");
   };
-  const logout = async () => {
-    signOut("google");
+
+  const handleLogoutClick = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8080/logout", {
+        method: "GET",
+      });
+      if (response.ok) {
+        setIsSignedIn(false);
+        setShowFiles(false);
+        console.log("logged out");
+        window.location.reload();
+      } else {
+        console.log("login failed");
+      }
+    } catch (error) {
+      console.error("error logging out:", error);
+    }
   };
 
   return (
@@ -132,7 +129,7 @@ export function Dashboard() {
               Sign In
             </Button> */}
             {!isSignedIn && (
-              <Button onClick={() => login()} color="primary">
+              <Button onClick={() => handleLoginClick()} color="primary">
                 <UserIcon className="h-4 w-4 mr-2" />
                 Sign In
               </Button>
@@ -160,7 +157,7 @@ export function Dashboard() {
                   </DropdownItem> */}
                   <DropdownItem
                     key="logout"
-                    onClick={logout}
+                    onClick={handleLogoutClick}
                     className="text-danger"
                   >
                     Log Out
@@ -170,176 +167,7 @@ export function Dashboard() {
             )}
           </div>
         </header>
-        <main className="flex-1 p-4 md:p-6">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            <Card className="relative group">
-              <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
-                <span className="sr-only">Open file</span>
-              </Link>
-              <div className="flex items-center justify-center h-24 bg-muted rounded-t-lg">
-                <FileIcon className="w-10 h-10 text-muted-foreground" />
-              </div>
-              <CardContent className="p-4">
-                <h3 className="text-sm font-medium truncate">
-                  Important Document.pdf
-                </h3>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>PDF</span>
-                  <span>12.3 MB</span>
-                  <span>2 days ago</span>
-                </div>
-              </CardContent>
-              <CardFooter className="flex items-center justify-end gap-2 p-2">
-                <Button variant="ghost" size="icon">
-                  <ShareIcon className="w-4 h-4" />
-                  <span className="sr-only">Share</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <DownloadIcon className="w-4 h-4" />
-                  <span className="sr-only">Download</span>
-                </Button>
-              </CardFooter>
-            </Card>
-            <Card className="relative group">
-              <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
-                <span className="sr-only">Open file</span>
-              </Link>
-              <div className="flex items-center justify-center h-24 bg-muted rounded-t-lg">
-                <FolderIcon className="w-10 h-10 text-muted-foreground" />
-              </div>
-              <CardContent className="p-4">
-                <h3 className="text-sm font-medium truncate">Design Files</h3>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Folder</span>
-                  <span>45.6 MB</span>
-                  <span>1 week ago</span>
-                </div>
-              </CardContent>
-              <CardFooter className="flex items-center justify-end gap-2 p-2">
-                <Button variant="ghost" size="icon">
-                  <ShareIcon className="w-4 h-4" />
-                  <span className="sr-only">Share</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <DownloadIcon className="w-4 h-4" />
-                  <span className="sr-only">Download</span>
-                </Button>
-              </CardFooter>
-            </Card>
-            <Card className="relative group">
-              <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
-                <span className="sr-only">Open file</span>
-              </Link>
-              <div className="flex items-center justify-center h-24 bg-muted rounded-t-lg">
-                <ImageIcon className="w-10 h-10 text-muted-foreground" />
-              </div>
-              <CardContent className="p-4">
-                <h3 className="text-sm font-medium truncate">
-                  Vacation Photos.zip
-                </h3>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>ZIP</span>
-                  <span>102 MB</span>
-                  <span>3 weeks ago</span>
-                </div>
-              </CardContent>
-              <CardFooter className="flex items-center justify-end gap-2 p-2">
-                <Button variant="ghost" size="icon">
-                  <ShareIcon className="w-4 h-4" />
-                  <span className="sr-only">Share</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <DownloadIcon className="w-4 h-4" />
-                  <span className="sr-only">Download</span>
-                </Button>
-              </CardFooter>
-            </Card>
-            <Card className="relative group">
-              <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
-                <span className="sr-only">Open file</span>
-              </Link>
-              <div className="flex items-center justify-center h-24 bg-muted rounded-t-lg">
-                <FileIcon className="w-10 h-10 text-muted-foreground" />
-              </div>
-              <CardContent className="p-4">
-                <h3 className="text-sm font-medium truncate">
-                  Presentation.pptx
-                </h3>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>PPTX</span>
-                  <span>25.4 MB</span>
-                  <span>1 month ago</span>
-                </div>
-              </CardContent>
-              <CardFooter className="flex items-center justify-end gap-2 p-2">
-                <Button variant="ghost" size="icon">
-                  <ShareIcon className="w-4 h-4" />
-                  <span className="sr-only">Share</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <DownloadIcon className="w-4 h-4" />
-                  <span className="sr-only">Download</span>
-                </Button>
-              </CardFooter>
-            </Card>
-            <Card className="relative group">
-              <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
-                <span className="sr-only">Open file</span>
-              </Link>
-              <div className="flex items-center justify-center h-24 bg-muted rounded-t-lg">
-                <FileIcon className="w-10 h-10 text-muted-foreground" />
-              </div>
-              <CardContent className="p-4">
-                <h3 className="text-sm font-medium truncate">
-                  Annual Report.docx
-                </h3>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>DOCX</span>
-                  <span>8.2 MB</span>
-                  <span>2 months ago</span>
-                </div>
-              </CardContent>
-              <CardFooter className="flex items-center justify-end gap-2 p-2">
-                <Button variant="ghost" size="icon">
-                  <ShareIcon className="w-4 h-4" />
-                  <span className="sr-only">Share</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <DownloadIcon className="w-4 h-4" />
-                  <span className="sr-only">Download</span>
-                </Button>
-              </CardFooter>
-            </Card>
-            <Card className="relative group">
-              <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
-                <span className="sr-only">Open file</span>
-              </Link>
-              <div className="flex items-center justify-center h-24 bg-muted rounded-t-lg">
-                <FileIcon className="w-10 h-10 text-muted-foreground" />
-              </div>
-              <CardContent className="p-4">
-                <h3 className="text-sm font-medium truncate">
-                  Spreadsheet.xlsx
-                </h3>
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>XLSX</span>
-                  <span>18.7 MB</span>
-                  <span>3 months ago</span>
-                </div>
-              </CardContent>
-              <CardFooter className="flex items-center justify-end gap-2 p-2">
-                <Button variant="ghost" size="icon">
-                  <ShareIcon className="w-4 h-4" />
-                  <span className="sr-only">Share</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <DownloadIcon className="w-4 h-4" />
-                  <span className="sr-only">Download</span>
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </main>
+        {showFiles && <Files />}
       </div>
     </div>
   );

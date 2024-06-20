@@ -1,6 +1,7 @@
+from flask import jsonify
 import os.path
+import requests
 from dotenv import load_dotenv
-import json
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -50,6 +51,36 @@ def auth():
     except HttpError as error:
         print(f"An error occurred: {error}")
     # print(client_config)
+    
+
+def revoke():
+    if os.path.exists("token.json"):
+        with open("token.json", "r") as token_file:
+            creds = Credentials.from_authorized_user_file("token.json", SCOPES)
         
-if __name__ == "__main__":
-    auth()
+        # Revoke the token
+        revoke = requests.post(
+            'https://oauth2.googleapis.com/revoke',
+            params={'token': creds.token},
+            headers={'content-type': 'application/x-www-form-urlencoded'}
+        )
+
+        if revoke.status_code == 200:
+            os.remove("token.json")
+            return jsonify({'status': 'success'}), 200
+            # print('Token successfully revoked')
+        else:
+            return jsonify({'status': 'error', 'message': 'Failed to revoke token'}), 500
+            # print('An error occurred while revoking the token')
+        
+    else:
+        return jsonify({'status': 'error', 'message': 'Token file not found'}), 404
+    
+
+        # Delete the token file
+        # print("Token file deleted.")
+
+        
+# if __name__ == "__main__":
+    # auth()
+    # logout()

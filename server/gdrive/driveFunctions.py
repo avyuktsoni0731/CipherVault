@@ -21,7 +21,6 @@ class driveFunctions():
             
         return name_list
     
-    
     def search_files_by_name(file_name):
     
         service = auth()
