@@ -133,3 +133,4 @@ dist
 server/__pycache__
 server/encryptor/__pycache__
 server/gdrive/__pycache__
+server/token.json
