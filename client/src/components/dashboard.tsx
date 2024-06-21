@@ -52,6 +52,7 @@ export function Dashboard() {
         );
         localStorage.setItem("userName", jsonData.user_info.name);
         window.location.reload();
+        console.log(jsonData.user_info.profile_picture);
       } else {
         console.log("login failed");
       }
