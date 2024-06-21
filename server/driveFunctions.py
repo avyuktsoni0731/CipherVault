@@ -6,24 +6,28 @@ class driveFunctions():
 
     def list_files():
         
-        service = auth()
-        name_list = []
+        service = auth()[0]
+        files_info = []
+        # name_list = []
         
         response = service.files().list(
             q="name contains '.enc'",
             pageSize=100,
-            fields="files(id, name)"
+            fields="files(id, name, size, modifiedTime)"
         ).execute()
         files = response.get('files', [])
         
-        for file in files:
-            name_list.append(file['name'])
-            
-        return name_list
+        if not files:
+            print("No files found.")
+        else:
+            for file in files:
+                file_info = {'name': file['name'][:-4], 'id': file['id'], 'size': file.get('size', 'Unknown'), 'mimeType': file.get('mimeType', 'Unknown'), 'modifiedTime': file.get('modifiedTime', 'Unknown')}
+                files_info.append(file_info)
+        return files_info
     
     def search_files_by_name(file_name):
     
-        service = auth()
+        service = auth()[0]
         query = f"name = '{file_name}'"
         response = service.files().list(q=query, fields='files(id)').execute()
         files = response.get('files', [])
@@ -33,7 +37,7 @@ class driveFunctions():
     
     def download_file_from_drive(file_id, file_path):
     
-        service = auth()
+        service = auth()[0]
         request = service.files().get_media(fileId=file_id)
         
         with open(file_path, 'wb') as f:
@@ -44,7 +48,7 @@ class driveFunctions():
 
 
     def upload_file_to_drive(file_path, file_name):
-        service = auth()
+        service = auth()[0]
 
         file_metadata = {
             'name': file_name

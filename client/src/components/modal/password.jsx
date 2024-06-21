@@ -35,11 +35,11 @@ export default function PasswordModal({ filename, setPasswordChecked }) {
         },
         body: JSON.stringify(data),
       });
-      setPasswordChecked(true);
       if (!response.ok) {
-        throw new Error("Try Again");
+        throw new Error("Password verification failed");
       }
-      console.log("Checked successfully");
+      setPasswordChecked(true);
+      console.log("Password checked successfully");
     } catch (error) {
       console.error("Error:", error);
     }
