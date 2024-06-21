@@ -132,8 +132,5 @@ dist
 # flask
 server/__pycache__
 server/encryptor/__pycache__
-<<<<<<< HEAD
 server/gdrive/__pycache__
 server/token.json
-=======
-server/gdrive/__pycache__

@@ -16,13 +16,21 @@ import {
 import { Files } from "./files";
 
 export function Dashboard() {
-  const session = useSession();
-
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [userName, setUserName] = useState("");
   const [showFiles, setShowFiles] = useState(false);
+
+  useEffect(() => {
+    const signedIn = localStorage.getItem("isSignedIn");
+    if (signedIn === "true") {
+      setIsSignedIn(true);
+      setShowFiles(true);
+      setProfilePicture(localStorage.getItem("profilePicture"));
+      setUserName(localStorage.getItem("userName"));
+    }
+  }, []);
 
   const handleLoginClick = async () => {
     try {
@@ -30,9 +38,12 @@ export function Dashboard() {
         method: "GET",
       });
 
+      const jsonData = await response.json();
+
       if (response.ok) {
         setIsSignedIn(true);
         setShowFiles(true);
+        localStorage.setItem("isSignedIn", "true");
         console.log("logged in");
         localStorage.setItem(
           "profilePicture",
@@ -40,7 +51,6 @@ export function Dashboard() {
         );
         localStorage.setItem("userName", jsonData.user_info.name);
         window.location.reload();
-        console.log(jsonData.user_info.profile_picture);
       } else {
         console.log("login failed");
       }
@@ -57,6 +67,7 @@ export function Dashboard() {
       if (response.ok) {
         setIsSignedIn(false);
         setShowFiles(false);
+        localStorage.removeItem("isSignedIn");
         console.log("logged out");
         window.location.reload();
       } else {
@@ -131,9 +142,6 @@ export function Dashboard() {
               <FolderPlusIcon className="h-4 w-4 mr-2" />
               New Folder
             </Button>
-            {/* <Button onClick={() => login()}>
-              Sign In
-            </Button> */}
             {!isSignedIn && (
               <Button onClick={() => handleLoginClick()} color="primary">
                 <UserIcon className="h-4 w-4 mr-2" />
@@ -158,9 +166,6 @@ export function Dashboard() {
                     <p className="font-semibold">Signed in as</p>
                     <p className="font-semibold">{userName}</p>
                   </DropdownItem>
-                  {/* <DropdownItem href="/dashboard" key="dashboard">
-                    Dashboard
-                  </DropdownItem> */}
                   <DropdownItem
                     key="logout"
                     onClick={handleLogoutClick}

@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 
 from googleapiclient.errors import HttpError
 
-SCOPES = ["https://www.googleapis.com/auth/drive"]
+SCOPES = ["https://www.googleapis.com/auth/drive", 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', "openid"]
 
 def auth():
     load_dotenv()
@@ -44,14 +44,28 @@ def auth():
             token.write(creds.to_json())
 
     try:
-        service = build("drive", "v3", credentials=creds)
+        drive_service = build("drive", "v3", credentials=creds)
+        people_service = build("people", "v1", credentials=creds)
         
-        return service
+        return drive_service, people_service
 
     except HttpError as error:
         print(f"An error occurred: {error}")
-    # print(client_config)
     
+    
+def get_user_info(people_service):
+    try:
+        profile = people_service.people().get(resourceName='people/me', personFields='names,emailAddresses,photos').execute()
+        user_info = {
+            'name': profile['names'][0]['displayName'],
+            'email': profile['emailAddresses'][0]['value'],
+            'profile_picture': profile['photos'][0]['url']
+        }
+        return user_info
+    except HttpError as error:
+        print(f"An error occurred while fetching user info: {error}")
+        return None
+        
 
 def revoke():
     if os.path.exists("token.json"):
@@ -71,16 +85,19 @@ def revoke():
             # print('Token successfully revoked')
         else:
             return jsonify({'status': 'error', 'message': 'Failed to revoke token'}), 500
-            # print('An error occurred while revoking the token')
         
     else:
         return jsonify({'status': 'error', 'message': 'Token file not found'}), 404
     
 
-        # Delete the token file
-        # print("Token file deleted.")
 
+def fxn():
+    try:
+        drive_service, people_service = auth()
+        user_info = get_user_info(people_service)
+        print(user_info)
+    except Exception as e:
+        print(f"An error occured: {e}")
         
-# if __name__ == "__main__":
-    # auth()
-    # logout()
+if __name__ == "__main__":
+    print(auth()[0])
