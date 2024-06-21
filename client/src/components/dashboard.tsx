@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 import { useState, useEffect } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import {
   User,
   Dropdown,

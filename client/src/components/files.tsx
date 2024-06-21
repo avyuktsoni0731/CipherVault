@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import PasswordModal from "./modal/password";
 
 export function Files() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({ name: [] });
   const [showPassword, setShowPassword] = useState(false);
   const [filename, setFilename] = useState("");
   const [passwordChecked, setPasswordChecked] = useState(false);
@@ -34,42 +34,31 @@ export function Files() {
     setPasswordChecked(false);
   };
 
-  const formatFileSize = (bytes) => {
-    if (bytes >= 1073741824) {
-      return (bytes / 1073741824).toFixed(2) + " GB";
-    } else if (bytes >= 1048576) {
-      return (bytes / 1048576).toFixed(2) + " MB";
-    } else if (bytes >= 1024) {
-      return (bytes / 1024).toFixed(2) + " KB";
-    } else if (bytes > 1) {
-      return bytes + " bytes";
-    } else if (bytes === 1) {
-      return bytes + " byte";
-    } else {
-      return "0 bytes";
-    }
+  const handleRefresh = () => {
+    console.log("refresh");
+    fetchData();
   };
 
   return (
     <>
       <main className="flex-1 p-4 md:p-6">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {data.map((item, index) => (
+          {data.name.map((item, index) => (
             <Card className="relative group" key={index}>
+              {/* <Link href="#" className="absolute inset-0 z-10" prefetch={false}>
+                <span className="sr-only">Open file</span>
+              </Link> */}
               <div className="flex items-center justify-center h-24 bg-muted rounded-t-lg">
                 <FileIcon className="w-10 h-10 text-muted-foreground" />
               </div>
               <CardContent className="p-4">
-                <h3 className="text-sm font-medium truncate">{item.name}</h3>
+                <h3 className="text-sm font-medium truncate">
+                  Important Document.pdf
+                </h3>
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
-                  <span>
-                    {item.size === "Unknown"
-                      ? item.size
-                      : formatFileSize(Number(item.size))}
-                  </span>
-                  <span>
-                    {new Date(item.modifiedTime).toLocaleDateString()}
-                  </span>
+                  <span>PDF</span>
+                  <span>12.3 MB</span>
+                  <span>2 days ago</span>
                 </div>
               </CardContent>
               <CardFooter className="flex items-center justify-end gap-2 p-2">
