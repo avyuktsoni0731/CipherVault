@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from encryptor.encryptor import Encryptor
@@ -41,6 +41,7 @@ def get_data():
     file_list = driveFunctions.list_files()
     return jsonify(file_list)
 
+
 @app.route("/api/user_info", methods=["GET", "POST"])
 def test_get_user_info():
     try:
@@ -49,6 +50,17 @@ def test_get_user_info():
         return jsonify({'status': 'success', 'user_info': user_info}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/send', methods=["GET" ,"POST"])
+def check_password():
+    data = request.get_json()
+    filename = data.get('filename')
+    password = data.get('password')
+
+    print(f'Filename: {filename}\nPassword: {password}')
+
+    return jsonify({'password': password, 'filename': filename})
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

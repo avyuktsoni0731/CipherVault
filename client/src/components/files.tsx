@@ -29,7 +29,7 @@ export function Files() {
 
   const fileClick = (item) => {
     console.log("click");
-    setFilename(item);
+    setFilename(item.name);
     setShowPassword(true);
     setPasswordChecked(false);
   };
@@ -48,6 +48,10 @@ export function Files() {
     } else {
       return "0 bytes";
     }
+  };
+
+  const closeModal = () => {
+    setShowPassword(false);
   };
 
   return (
@@ -90,14 +94,16 @@ export function Files() {
               </CardFooter>
             </Card>
           ))}
-          {showPassword && !passwordChecked && (
-            <PasswordModal
-              filename={filename}
-              setPasswordChecked={setPasswordChecked}
-            />
-          )}
         </div>
       </main>
+      {showPassword && !passwordChecked && (
+        <PasswordModal
+          filename={filename}
+          isOpen={showPassword}
+          onClose={closeModal}
+          setPasswordChecked={setPasswordChecked}
+        />
+      )}
     </>
   );
 }
