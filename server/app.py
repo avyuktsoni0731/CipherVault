@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import os
 
 from encryptor.encryptor import Encryptor
 
@@ -9,6 +10,9 @@ from driveFunctions import driveFunctions
 
 app = Flask(__name__)
 CORS(app)
+
+UPLOAD_FOLDER = '../server/test-data'
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 name_list = []
 
@@ -63,6 +67,25 @@ def check_password():
         return jsonify({'success': 'success'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/upload', methods=["POST"])
+def upload_file():
+    try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file part in the request'}), 400
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
+        
+        file.save(os.path.join(UPLOAD_FOLDER, file.filename))
+        return jsonify({'message': 'File Uploaded Successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

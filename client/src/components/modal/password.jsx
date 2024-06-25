@@ -6,7 +6,6 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
   Checkbox,
   Input,
   Link,
@@ -58,16 +57,11 @@ export default function PasswordModal({
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onClose}
-        placement="top-center"
-        // onSubmit={handleFormSubmit}
-      >
+      <Modal isOpen={isOpen} onOpenChange={onClose} placement="top-center">
         <ModalContent>
           <form onSubmit={handleFormSubmit}>
             <ModalHeader className="flex flex-col gap-1">
-              Enter Password
+              Enter Your Key
             </ModalHeader>
             <ModalBody>
               <Input
@@ -76,30 +70,18 @@ export default function PasswordModal({
                 endContent={
                   <LockIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
                 }
-                label="Password"
-                placeholder="Enter your password"
+                label="Key"
+                placeholder="Enter your key"
                 type="password"
                 variant="bordered"
               />
-              <div className="flex py-2 px-1 justify-between">
-                <Checkbox
-                  classNames={{
-                    label: "text-small",
-                  }}
-                >
-                  Remember me
-                </Checkbox>
-                <Link color="primary" href="#" size="sm">
-                  Forgot password?
-                </Link>
-              </div>
             </ModalBody>
             <ModalFooter>
               <Button color="danger" variant="flat" onPress={onClose}>
                 Close
               </Button>
               <Button color="primary" type="submit">
-                Sign in
+                Verify Key
               </Button>
             </ModalFooter>
           </form>

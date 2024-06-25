@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import UploadFileModal from "./modal/upload";
 
 import { useState, useEffect } from "react";
 import {
@@ -21,6 +22,7 @@ export function Dashboard() {
   const [profilePicture, setProfilePicture] = useState("");
   const [userName, setUserName] = useState("");
   const [showFiles, setShowFiles] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   useEffect(() => {
     const signedIn = localStorage.getItem("isSignedIn");
@@ -134,7 +136,10 @@ export function Dashboard() {
                 />
               </div>
             </form>
-            <Button variant="outline">
+            <Button
+              variant="outline"
+              onClick={() => setIsUploadModalOpen(true)}
+            >
               <UploadIcon className="h-4 w-4 mr-2" />
               Upload
             </Button>
@@ -180,6 +185,10 @@ export function Dashboard() {
         </header>
         {showFiles && <Files />}
       </div>
+      <UploadFileModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+      />
     </div>
   );
 }
