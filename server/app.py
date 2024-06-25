@@ -52,15 +52,17 @@ def test_get_user_info():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
-@app.route('/send', methods=["GET" ,"POST"])
+@app.route('/check-password', methods=["GET" ,"POST"])
 def check_password():
-    data = request.get_json()
-    filename = data.get('filename')
-    password = data.get('password')
+    try:
+        data = request.get_json()
+        filename = data.get('filename')
+        password = data.get('password')
+        print(f'Filename: {filename}\nPassword: {password}')
 
-    print(f'Filename: {filename}\nPassword: {password}')
-
-    return jsonify({'password': password, 'filename': filename})
+        return jsonify({'success': 'success'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
