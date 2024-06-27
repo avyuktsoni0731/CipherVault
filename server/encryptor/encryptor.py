@@ -69,25 +69,44 @@ class Encryptor():
             print('Incorrect Key!')
 
 if __name__ == "__main__":
-    # Example usage
+    # # Example usage
+    
+    
+    # # Encrypt a file
+    # input_file = '../test-data/spectreseek.png'
+    # filename = os.path.basename(input_file)
+    # print(input_file + '.enc')
+    # print(filename+'.enc')
+    # # encrypted_file = f'../test-data/{filename}'
+    # # new_filename = filename.split('.')[0]+'.'+filename.split('.')[-2]
+
+    # # print(new_filename)
+
+    # # decrypt_file_path = f'{new_filename}'
+
+    # # Encryptor.encrypt_file(input_file, input_file)
+    
+    # # Decrypt the file
+    # # The key should be copied from the output of the encryption step
+    # key = input("Enter the encryption key to decrypt the file: ")
+    # Encryptor.decrypt_file(input_file + '.enc', key, './')
+    # # print(f"File decrypted and saved as .")
+    
+        # Example usage
     
     # Encrypt a file
-    input_file = '../test-data/spectreseek.png'
+    input_file = "../test-data/spectreseek.png"
     filename = os.path.basename(input_file)
     # print(filename)
-    encrypted_file = f'../test-data/{filename}'
+    # encrypted_file = "example.enc"
+    decrypt_file_path = f"../test-data/decrypted/{filename}"
     
-    # new_filename = filename.split('.')[0]+'.'+filename.split('.')[-2]
-
-    # print(new_filename)
-
-    # print(new_filename)
-    # decrypt_file_path = f'{new_filename}'
-
-    Encryptor.encrypt_file(input_file, encrypted_file)
+    # Encryptor.encrypt_file(input_file, input_file)
     
     # Decrypt the file
     # The key should be copied from the output of the encryption step
+    key = "b80374d0b8ead449cdc54e2ec6b6154010f3235557a3825df23f58eb0987388a"
     # key = input("Enter the encryption key to decrypt the file: ")
-    # Encryptor.decrypt_file(encrypted_file, key, decrypt_file_path)
+    Encryptor.decrypt_file('/private/var/folders/5v/2qxxqd7d041gd2pwzqr0lkvw0000gn/T/tmpw1s7f5mm/IMG_0316.PNG.enc', key, decrypt_file_path)
+    # Encryptor.decrypt_file(input_file + '.enc', key, decrypt_file_path)
     # print(f"File decrypted and saved as {decrypt_file_path}")

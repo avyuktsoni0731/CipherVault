@@ -1,6 +1,11 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import tempfile
+from pathlib import Path
+from werkzeug.utils import secure_filename
 import os
+
+import time
 
 from encryptor.encryptor import Encryptor
 
@@ -16,7 +21,7 @@ UPLOAD_FOLDER = '../server/test-data'
 
 name_list = []
 
-encryptor = Encryptor()
+# encryptor = Encryptor()
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -60,9 +65,23 @@ def test_get_user_info():
 def check_password():
     try:
         data = request.get_json()
-        filename = data.get('filename')
+        filename = data.get('filename') + '.enc'
         password = data.get('password')
         print(f'Filename: {filename}\nPassword: {password}')
+
+        download_path = str(Path.home() / "Downloads")
+
+        file_id = driveFunctions.search_files_by_name(filename)
+        
+        temp_file_path = '/private' + driveFunctions.download_file_from_drive(file_id, filename)
+
+        print(temp_file_path)
+        
+        time.sleep(2)
+
+        Encryptor.decrypt_file(temp_file_path, password, download_path)
+
+        os.remove(temp_file_path)
 
         return jsonify({'success': 'success'}), 200
     except Exception as e:
@@ -80,7 +99,28 @@ def upload_file():
         if file.filename == '':
             return jsonify({'error': 'No selected file'}), 400
         
-        file.save(os.path.join(UPLOAD_FOLDER, file.filename))
+        # file.save(os.path.join(UPLOAD_FOLDER, file.filename))
+        
+        # print(f'filename: {file.filename}')
+        
+        ## driveFunction
+        temp_dir = tempfile.mkdtemp()
+
+        filename = secure_filename(file.filename)
+        
+        temp_file_path = os.path.join(temp_dir, filename)
+        file.save(temp_file_path)
+        
+        print(temp_file_path)
+        print(filename)
+
+        Encryptor.encrypt_file(temp_file_path, temp_file_path)
+
+        driveFunctions.upload_file_to_drive(temp_file_path + '.enc', filename + '.enc')
+
+        os.remove(temp_file_path)
+        ##
+        
         return jsonify({'message': 'File Uploaded Successfully'}), 200
 
     except Exception as e:

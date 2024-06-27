@@ -35,6 +35,7 @@ export default function UploadFileModal({ isOpen, onClose }) {
       console.log("File uploaded successfully");
       setFile(null);
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error:", error);
     }

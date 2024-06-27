@@ -1,6 +1,8 @@
 from driveAPI import auth
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
-import io
+import tempfile
+from werkzeug.utils import secure_filename
+import io, os
 
 class driveFunctions():
 
@@ -8,10 +10,9 @@ class driveFunctions():
         
         service = auth()[0]
         files_info = []
-        # name_list = []
         
         response = service.files().list(
-            q="name contains '.enc'",
+            q="name contains '.enc' and trashed = false",
             pageSize=100,
             fields="files(id, name, size, modifiedTime)"
         ).execute()
@@ -35,16 +36,29 @@ class driveFunctions():
         return file_ids[0]
     
     
-    def download_file_from_drive(file_id, file_path):
+    def download_file_from_drive(file_id, file_name):
     
         service = auth()[0]
         request = service.files().get_media(fileId=file_id)
         
-        with open(file_path, 'wb') as f:
+        ##tempfile
+        temp_dir = tempfile.mkdtemp()
+
+        sec_filename = secure_filename(file_name)
+        
+        temp_file_path = os.path.join(temp_dir, sec_filename)
+        ##
+        
+        # download_path = str(Path.home() / "Downloads")
+
+        with open(temp_file_path, 'wb') as f:
             downloader = MediaIoBaseDownload(f, request)
             done = False
             while done is False:
                 status, done = downloader.next_chunk()
+                
+        # print(temp_file_path)
+        return temp_file_path
 
 
     def upload_file_to_drive(file_path, file_name):
@@ -60,4 +74,6 @@ class driveFunctions():
         
         
 if __name__ == "__main__":
-    print(driveFunctions.list_files())
+    temp_path = driveFunctions.download_file_from_drive("1UcD7L0m2E0mxuHyqxr90cxIyU99xlWdf", "InfoBytes GS_8.png.enc")
+
+    print(temp_path)
