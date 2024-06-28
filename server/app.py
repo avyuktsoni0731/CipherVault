@@ -61,28 +61,28 @@ def test_get_user_info():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
-@app.route('/check-password', methods=["GET" ,"POST"])
+@app.route('/check-password', methods=["POST"])
 def check_password():
     try:
         data = request.get_json()
-        filename = data.get('filename') + '.enc'
-        password = data.get('password')
-        print(f'Filename: {filename}\nPassword: {password}')
+        enc_filename = data.get('filename') + '.enc'
+        enc_password = data.get('password')
+        print(f'Filename: {enc_filename}\nPassword: {enc_password}')
 
         download_path = str(Path.home() / "Downloads")
 
-        file_id = driveFunctions.search_files_by_name(filename)
+        file_id = driveFunctions.search_files_by_name(enc_filename)
         
-        temp_file_path = '/private' + driveFunctions.download_file_from_drive(file_id, filename)
+        temp_file_path = driveFunctions.download_file_from_drive(file_id, enc_filename)
 
         print(temp_file_path)
         
         time.sleep(2)
 
-        Encryptor.decrypt_file(temp_file_path, password, download_path)
+        Encryptor.decrypt_file(temp_file_path, enc_password, download_path)
 
         os.remove(temp_file_path)
-
+        
         return jsonify({'success': 'success'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -98,10 +98,6 @@ def upload_file():
         
         if file.filename == '':
             return jsonify({'error': 'No selected file'}), 400
-        
-        # file.save(os.path.join(UPLOAD_FOLDER, file.filename))
-        
-        # print(f'filename: {file.filename}')
         
         ## driveFunction
         temp_dir = tempfile.mkdtemp()

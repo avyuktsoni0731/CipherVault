@@ -42,6 +42,9 @@ class Encryptor():
     # Function to decrypt a file
     def decrypt_file(input_file: str, key: str, output_file: str):
         try:
+            
+            print(f'Input File: {input_file}\nKey: {key}')
+            
             # Convert the key from hex to bytes
             key = bytes.fromhex(key)
             
@@ -61,10 +64,10 @@ class Encryptor():
             unpadder = padding.PKCS7(algorithms.AES.block_size).unpadder()
             plaintext = unpadder.update(padded_plaintext) + unpadder.finalize()
             
+            
             # Write the plaintext to the output file
             with open(output_file, 'wb') as f:
                 f.write(plaintext)
-        
         except:
             print('Incorrect Key!')
 
@@ -105,8 +108,8 @@ if __name__ == "__main__":
     
     # Decrypt the file
     # The key should be copied from the output of the encryption step
-    key = "b80374d0b8ead449cdc54e2ec6b6154010f3235557a3825df23f58eb0987388a"
+    key = "a71e6709ca137266d7a52e99091eb5d272fce10f60dcfd75235d1d2477d096b0"
     # key = input("Enter the encryption key to decrypt the file: ")
-    Encryptor.decrypt_file('/private/var/folders/5v/2qxxqd7d041gd2pwzqr0lkvw0000gn/T/tmpw1s7f5mm/IMG_0316.PNG.enc', key, decrypt_file_path)
+    Encryptor.decrypt_file('/var/folders/5v/2qxxqd7d041gd2pwzqr0lkvw0000gn/T/tmpkro0ou3y/A-2.png.enc', key, decrypt_file_path)
     # Encryptor.decrypt_file(input_file + '.enc', key, decrypt_file_path)
     # print(f"File decrypted and saved as {decrypt_file_path}")
