@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
 
-export default function UploadFileModal({ isOpen, onClose }) {
+export default function DeleteModal({ isOpen, onClose }) {
   const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -18,13 +18,22 @@ export default function UploadFileModal({ isOpen, onClose }) {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const formData = new FormData();
-    formData.append("file", file);
+    // const formData = new FormData();
+    // formData.append("file", file);
 
     try {
-      const response = await fetch("http://127.0.0.1:8080/upload", {
+      //   const response = await fetch("http://127.0.0.1:8080/upload", {
+      //     method: "POST",
+      //     body: formData,
+      //   });
+
+      await fetch("http://127.0.0.1:8080/api/delete_file", {
         method: "POST",
-        body: formData,
+        // body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ filename: file }),
       });
 
       if (!response.ok) {
@@ -45,16 +54,16 @@ export default function UploadFileModal({ isOpen, onClose }) {
       <ModalContent>
         <form onSubmit={handleFormSubmit}>
           <ModalHeader className="flex flex-col gap-1 cursor-default">
-            Upload File
+            Are you sure you want to delete this file?
           </ModalHeader>
-          <ModalBody>
+          {/* <ModalBody>
             <Input
               type="file"
               onChange={handleFileChange}
               label="File"
               accept="*"
             />
-          </ModalBody>
+          </ModalBody> */}
           <ModalFooter>
             <Button color="danger" variant="flat" onPress={onClose}>
               Close

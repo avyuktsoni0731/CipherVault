@@ -123,5 +123,20 @@ def upload_file():
         return jsonify({'error': str(e)}), 500
     
 
+@app.route('/api/delete_file', methods=['POST'])
+def delete_file():
+    try:
+        data = request.get_json()
+        file_id = data.get('file_id')
+        
+        # if not file_id:
+        #     return jsonify({'status': 'error', 'message': 'File ID is required'}), 400
+
+        # driveFunctions.delete_file(file_id)
+        print(f'File ID: {file_id}')
+        return jsonify({'status': 'success', 'message': 'File deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
