@@ -108,8 +108,8 @@ if __name__ == "__main__":
     
     # Decrypt the file
     # The key should be copied from the output of the encryption step
-    key = "a71e6709ca137266d7a52e99091eb5d272fce10f60dcfd75235d1d2477d096b0"
+    key = "256225049a46cf75805d9d58dbad4728cfad7d92457fb7ec794dfa8bc36072f0"
     # key = input("Enter the encryption key to decrypt the file: ")
-    Encryptor.decrypt_file('/var/folders/5v/2qxxqd7d041gd2pwzqr0lkvw0000gn/T/tmpkro0ou3y/A-2.png.enc', key, decrypt_file_path)
+    Encryptor.decrypt_file('/var/folders/5v/2qxxqd7d041gd2pwzqr0lkvw0000gn/T/tmp5irq0mdy/IMG_5733.JPG.enc', key, decrypt_file_path)
     # Encryptor.decrypt_file(input_file + '.enc', key, decrypt_file_path)
     # print(f"File decrypted and saved as {decrypt_file_path}")

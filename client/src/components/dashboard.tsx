@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import UploadFileModal from "./modal/upload";
+import UploadFileModal from "./modal/upload.jsx";
 import DeleteModal from "./modal/delete.jsx";
 
 import { useState, useEffect } from "react";

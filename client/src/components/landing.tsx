@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import EncButton from "@/components/buttons/encrypt";
+import Reveal from "./Reveal";
 
 export function Landing() {
   return (
@@ -67,56 +68,41 @@ export function Landing() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="flex justify-center items-center w-full py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
+        <section className="flex justify-center items-center h-screen w-full">
+          <div className="container px-4 md:px-48">
+            <div className="flex flex-col justify-center items-center text-center space-y-4">
+              <div className="space-y-2 flex flex-col items-center">
+                <Reveal>
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Secure Your Data with Unbreakable Encryption
+                    Secure Your Data with
+                    <br />
+                    Unbreakable Encryption
                   </h1>
+                </Reveal>
+                <Reveal>
                   <p className="max-w-[600px] text-[#000] md:text-xl">
                     Our cloud storage platform offers end-to-end encryption,
                     zero-knowledge architecture, and client-side encryption to
                     keep your data safe and private.
                   </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  {/* <Link
-                    href="#"
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-primary-foreground px-8 text-sm font-medium text-primary shadow transition-colors hover:bg-primary-foreground/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}
-                  >
-                    Sign Up
-                  </Link> */}
-                  <EncButton />
-                  {/* <Link
-                    href="#"
-                    className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-primary text-primary-foreground px-8 text-sm font-medium shadow-sm transition-colors hover:bg-[#000] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}
-                  >
-                    Learn More
-                  </Link> */}
-                </div>
+                </Reveal>
               </div>
-              <Image
-                src="/heroImage.jpeg"
-                alt="Hero"
-                width={1024}
-                height={1024}
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square"
-              />
+              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <EncButton />
+              </div>
             </div>
           </div>
         </section>
-        <section className="flex justify-center items-center w-full py-12 md:py-24 lg:py-32 bg-muted">
+        <section className="flex justify-center items-center w-full bg-muted">
           <div className="container px-4 md:px-6">
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
+            <div className="mx-auto grid max-w-5xl items-center gap-6 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <div className="inline-block rounded-lg bg-muted py-1 text-sm text-primary">
-                    Easy to Use
-                  </div>
+                  <Reveal>
+                    <div className="inline-block rounded-lg bg-muted py-1 text-sm text-primary">
+                      Easy to Use
+                    </div>
+                  </Reveal>
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-foreground">
                     Simplify Your Cloud Storage
                   </h2>
@@ -149,7 +135,7 @@ export function Landing() {
             </div>
           </div>
         </section>
-        <section className="flex justify-center items-center w-full py-12 md:py-24 lg:py-32">
+        <section className="flex justify-center items-center w-full pt-32">
           <div className="container px-4 md:px-6">
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
               <img
@@ -189,7 +175,7 @@ export function Landing() {
             </div>
           </div>
         </section>
-        <section className="flex justify-center items-center w-full py-12 md:py-24 lg:py-32 bg-muted">
+        <section className="flex justify-center items-center w-full pt-32 bg-muted">
           <div className="container px-4 md:px-6">
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
@@ -233,7 +219,7 @@ export function Landing() {
             </div>
           </div>
         </section>
-        <section className="flex justify-center items-center w-full py-12 md:py-24 lg:py-32 border-t">
+        <section className="flex justify-center items-center w-full py-32 border-t">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-foreground">

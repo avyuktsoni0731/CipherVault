@@ -2,11 +2,14 @@
 import { useRef, useState } from "react";
 import { FiLock } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { Link } from "@nextui-org/react";
 
 const EncButton = () => {
   return (
-    <div className="place-content-center bg-neutral-900 py-4">
-      <EncryptButton />
+    <div className="place-content-center fade-element bg-neutral-900 py-4">
+      <Link href={`/dashboard`}>
+        <EncryptButton />
+      </Link>
     </div>
   );
 };
