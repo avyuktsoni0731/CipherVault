@@ -128,6 +128,7 @@ export function Files() {
         />
       )}
       <DeleteModal
+        filename={filename}
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
       />

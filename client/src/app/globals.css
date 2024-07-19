@@ -4,6 +4,10 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
+* {
+  scroll-behavior: smooth;
+}
+
 .fade-element {
   visibility: hidden;
   animation: fadeInAnimation ease 2s;

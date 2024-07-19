@@ -7,7 +7,7 @@ import { Link } from "@nextui-org/react";
 const EncButton = () => {
   return (
     <div className="place-content-center fade-element bg-neutral-900 py-4">
-      <Link href={`/dashboard`}>
+      <Link href="/pages/dashboard">
         <EncryptButton />
       </Link>
     </div>

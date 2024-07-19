@@ -38,7 +38,7 @@ export function Landing() {
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6 text-[#000]">
           <Link
-            href="#"
+            href="#features"
             className="text-sm font-medium hover:underline underline-offset-4"
             prefetch={false}
           >
@@ -59,7 +59,7 @@ export function Landing() {
             About
           </Link>
           <Link
-            href="#"
+            href="#contact-us"
             className="text-sm font-medium hover:underline underline-offset-4"
             prefetch={false}
           >
@@ -93,16 +93,17 @@ export function Landing() {
             </div>
           </div>
         </section>
-        <section className="flex justify-center items-center w-full bg-muted">
+        <section
+          id="features"
+          className="flex justify-center items-center w-full bg-muted"
+        >
           <div className="container px-4 md:px-6">
             <div className="mx-auto grid max-w-5xl items-center gap-6 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
-                  <Reveal>
-                    <div className="inline-block rounded-lg bg-muted py-1 text-sm text-primary">
-                      Easy to Use
-                    </div>
-                  </Reveal>
+                  <div className="inline-block rounded-lg bg-muted py-1 text-sm text-primary">
+                    Easy to Use
+                  </div>
                   <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-foreground">
                     Simplify Your Cloud Storage
                   </h2>
@@ -219,7 +220,10 @@ export function Landing() {
             </div>
           </div>
         </section>
-        <section className="flex justify-center items-center w-full py-32 border-t">
+        <section
+          id="contact-us"
+          className="flex justify-center items-center w-full py-32 border-t"
+        >
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-foreground">

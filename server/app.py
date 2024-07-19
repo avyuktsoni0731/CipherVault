@@ -3,8 +3,8 @@ from flask_cors import CORS
 import tempfile
 from pathlib import Path
 from werkzeug.utils import secure_filename
+from urllib.parse import unquote
 import os
-
 import time
 
 from encryptor.encryptor import Encryptor
@@ -66,16 +66,18 @@ def check_password():
     try:
         data = request.get_json()
         enc_filename = data.get('filename') + '.enc'
-        enc_password = data.get('password')
+        enc_password = unquote(data.get('password'))
         print(f'Filename: {enc_filename}\nPassword: {enc_password}')
-
-        download_path = str(Path.home() / "Downloads")
+        
+        output_filename = enc_filename[:-4]
+        download_path = str(Path.home() / "Downloads" / output_filename)
 
         file_id = driveFunctions.search_files_by_name(enc_filename)
         
         temp_file_path = driveFunctions.download_file_from_drive(file_id, enc_filename)
 
         print(temp_file_path)
+        print(download_path)
         
         time.sleep(2)
 
@@ -127,13 +129,11 @@ def upload_file():
 def delete_file():
     try:
         data = request.get_json()
-        file_id = data.get('file_id')
+        filename = data.get('filename') + '.enc'
+   
+        print(f'File ID: {filename}')
+        driveFunctions.delete_file(filename)
         
-        # if not file_id:
-        #     return jsonify({'status': 'error', 'message': 'File ID is required'}), 400
-
-        # driveFunctions.delete_file(file_id)
-        print(f'File ID: {file_id}')
         return jsonify({'status': 'success', 'message': 'File deleted successfully'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500

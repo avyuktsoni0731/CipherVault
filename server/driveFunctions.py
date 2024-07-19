@@ -73,15 +73,20 @@ class driveFunctions():
         print('File ID:', file.get('id'))
         
         
-    def delete_file(file_id):
+    def delete_file(file_name):
+        
+        file_id = driveFunctions.search_files_by_name(file_name)
+
+        print(file_id)
+        
         service = auth()[0]
         try:
-            service.files().delete()(fileId=file_id).execute()
+            service.files().delete(fileId=file_id).execute()
             print(f'File with ID: {file_id} deleted successfully.')
         except Exception as e:
             print(f'An error occured: {e}')
     
 if __name__ == "__main__":
-    temp_path = driveFunctions.download_file_from_drive("1UcD7L0m2E0mxuHyqxr90cxIyU99xlWdf", "InfoBytes GS_8.png.enc")
+    # temp_path = driveFunctions.download_file_from_drive("1UcD7L0m2E0mxuHyqxr90cxIyU99xlWdf", "InfoBytes GS_8.png.enc")
 
-    print(temp_path)
+    print(driveFunctions.delete_file('EttyDB.zip.enc'))

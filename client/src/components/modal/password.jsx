@@ -30,7 +30,7 @@ export default function PasswordModal({
     event.preventDefault();
     const data = {
       filename: filename,
-      password: inputValue,
+      password: encodeURIComponent(inputValue.trim()),
     };
     try {
       const response = await fetch("http://127.0.0.1:8080/check-password", {

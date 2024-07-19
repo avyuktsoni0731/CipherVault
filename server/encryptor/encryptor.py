@@ -68,8 +68,17 @@ class Encryptor():
             # Write the plaintext to the output file
             with open(output_file, 'wb') as f:
                 f.write(plaintext)
-        except:
-            print('Incorrect Key!')
+        # except:
+        #     print('Incorrect Key!')
+        except ValueError as e:
+            print(f'Decryption error: {str(e)}')
+            raise
+        except IOError as e:
+            print(f'File I/O error: {str(e)}')
+            raise
+        except Exception as e:
+            print(f'Unexpected error in decrypt_file: {str(e)}')
+            raise
 
 if __name__ == "__main__":
     # # Example usage

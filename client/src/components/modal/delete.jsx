@@ -9,7 +9,7 @@ import {
 } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
 
-export default function DeleteModal({ isOpen, onClose }) {
+export default function DeleteModal({ filename, isOpen, onClose }) {
   const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -18,29 +18,26 @@ export default function DeleteModal({ isOpen, onClose }) {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    // const formData = new FormData();
-    // formData.append("file", file);
+    const data = {
+      filename: filename,
+    };
 
     try {
-      //   const response = await fetch("http://127.0.0.1:8080/upload", {
-      //     method: "POST",
-      //     body: formData,
-      //   });
-
-      await fetch("http://127.0.0.1:8080/api/delete_file", {
+      const response = await fetch("http://127.0.0.1:8080/api/delete_file", {
         method: "POST",
-        // body: formData,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ filename: file }),
+        body: JSON.stringify(data),
       });
 
+      onClose();
+
       if (!response.ok) {
-        throw new Error("File upload failed");
+        throw new Error("File deletion failed");
       }
 
-      console.log("File uploaded successfully");
+      console.log("File deleted successfully");
       setFile(null);
       onClose();
       window.location.reload();
@@ -68,8 +65,8 @@ export default function DeleteModal({ isOpen, onClose }) {
             <Button color="danger" variant="flat" onPress={onClose}>
               Close
             </Button>
-            <Button color="primary" type="submit">
-              Upload
+            <Button color="danger" type="submit">
+              Delete
             </Button>
           </ModalFooter>
         </form>
