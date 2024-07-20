@@ -72,8 +72,12 @@ export function Landing() {
           <div className="container px-4 md:px-48">
             <div className="flex flex-col justify-center items-center text-center space-y-4">
               <div className="space-y-2 flex flex-col items-center">
+                {/* <GradualSpacing
+                  className="font-display text-center text-4xl font-bold tracking-[-0.1em] text-black dark:text-white md:text-7xl md:leading-[5rem]"
+                  text="CryptoDrive"
+                /> */}
                 <Reveal>
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-7xl/none">
                     Secure Your Data with
                     <br />
                     Unbreakable Encryption

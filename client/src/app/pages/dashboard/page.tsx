@@ -2,9 +2,7 @@
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import UploadFileModal from "@/components/modal/upload.jsx";
-import DeleteModal from "@/components/modal/delete.jsx";
 
 import { useState, useEffect } from "react";
 import {
@@ -19,7 +17,6 @@ import { Files } from "../../../components/files";
 
 export default function Dashboard() {
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [userName, setUserName] = useState("");
   const [showFiles, setShowFiles] = useState(false);
@@ -126,8 +123,8 @@ export default function Dashboard() {
           <div className="flex-1">
             <h1 className="font-semibold text-lg">My Files</h1>
           </div>
-          <div className="flex flex-1 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-            <form className="ml-auto flex-1 sm:flex-initial">
+          <div className="flex flex-1/4 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
+            {/* <form className="ml-auto flex-1 sm:flex-initial">
               <div className="relative">
                 <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -136,17 +133,13 @@ export default function Dashboard() {
                   className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
                 />
               </div>
-            </form>
+            </form> */}
             <Button
               variant="outline"
               onClick={() => setIsUploadModalOpen(true)}
             >
               <UploadIcon className="h-4 w-4 mr-2" />
               Upload
-            </Button>
-            <Button>
-              <FolderPlusIcon className="h-4 w-4 mr-2" />
-              New Folder
             </Button>
             {!isSignedIn && (
               <Button onClick={() => handleLoginClick()} color="primary">
