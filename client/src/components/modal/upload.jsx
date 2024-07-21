@@ -22,10 +22,14 @@ export default function UploadFileModal({ isOpen, onClose }) {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://127.0.0.1:8080/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://ciphervault-4l9d.onrender.com/upload",
+        {
+          // const response = await fetch("http://127.0.0.1:8080/upload", {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("File upload failed");

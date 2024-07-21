@@ -23,13 +23,17 @@ export default function DeleteModal({ filename, isOpen, onClose }) {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:8080/api/delete_file", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://ciphervault-4l9d.onrender.com/api/delete_file",
+        {
+          // const response = await fetch("http://127.0.0.1:8080/api/delete_file", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       onClose();
 
