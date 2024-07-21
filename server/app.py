@@ -23,6 +23,9 @@ name_list = []
 
 # encryptor = Encryptor()
 
+@app.route('/')
+def hello():
+    return jsonify("helloworld")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -133,7 +136,7 @@ def delete_file():
    
         print(f'File ID: {filename}')
         driveFunctions.delete_file(filename)
-        
+
         return jsonify({'status': 'success', 'message': 'File deleted successfully'}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
