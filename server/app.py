@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect
 from flask_cors import CORS
 import tempfile
 from pathlib import Path
@@ -6,36 +6,69 @@ from werkzeug.utils import secure_filename
 from urllib.parse import unquote
 import os
 import time
+from dotenv import load_dotenv
 
 from encryptor.encryptor import Encryptor
 
-from driveAPI import auth, revoke, get_user_info
+from driveAPI import auth, revoke, get_user_info, SCOPES
 from driveFunctions import driveFunctions
-
+from google_auth_oauthlib.flow import InstalledAppFlow
 
 app = Flask(__name__)
 CORS(app)
 
+load_dotenv()
+
 UPLOAD_FOLDER = '../server/test-data'
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 name_list = []
 
-# encryptor = Encryptor()
+client_config = {
+    "web": {
+        "client_id": os.getenv("CLIENT_ID"),
+        "project_id": os.getenv("PROJECT_ID"),
+        "auth_uri": os.getenv("AUTH_URI"),
+        "token_uri": os.getenv("TOKEN_URI"),
+        "auth_provider_x509_cert_url": os.getenv("AUTH_PROVIDER_X509_CERT_URL"),
+        "client_secret": os.getenv("CLIENT_SECRET"),
+        "redirect_uris": os.getenv("REDIRECT_URIS").split(","),
+        "javascript_origins": os.getenv("JAVASCRIPT_ORIGINS").split(","),
+    }
+}
 
 @app.route('/')
 def hello():
     return jsonify("helloworld")
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/oauth2callback")
+def oauth2callback():
+    flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
+    flow.fetch_token(authorization_response=request.url)
+
+    creds = flow.credentials
+    with open("token.json", "w") as token:
+        token.write(creds.to_json())
+
+    return jsonify({'status': 'success', 'message': 'Authorization completed. You can now close this window.'}), 200
+
+
+# @app.route("/login", methods=["GET", "POST"])
+# def login():
+#     try:
+#         auth()[0]
+#         people_service = auth()[1]
+#         user_info = get_user_info(people_service)
+#         return jsonify({'status': 'success', 'user_info': user_info}), 200
+#     except Exception as e:
+#         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route("/login", methods=["GET"])
 def login():
-    try:
-        auth()[0]
-        people_service = auth()[1]
-        user_info = get_user_info(people_service)
-        return jsonify({'status': 'success', 'user_info': user_info}), 200
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+    creds, auth_url = auth()
+    if creds:
+        return jsonify({'status': 'success', 'message': 'Already authenticated'}), 200
+    else:
+        return redirect(auth_url)
     
 
 @app.route("/logout", methods=["GET", "POST"])
@@ -54,10 +87,23 @@ def get_data():
     return jsonify(file_list)
 
 
+# @app.route("/api/user_info", methods=["GET", "POST"])
+# def test_get_user_info():
+#     try:
+#         _, people_service = auth()
+#         user_info = get_user_info(people_service)
+#         return jsonify({'status': 'success', 'user_info': user_info}), 200
+#     except Exception as e:
+#         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 @app.route("/api/user_info", methods=["GET", "POST"])
 def test_get_user_info():
+    creds, _ = auth()
+    if not creds:
+        return jsonify({'status': 'error', 'message': 'Authorization required.'}), 401
+
     try:
-        _, people_service = auth()
+        _, people_service = creds
         user_info = get_user_info(people_service)
         return jsonify({'status': 'success', 'user_info': user_info}), 200
     except Exception as e:

@@ -38,19 +38,22 @@ def auth():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
-        creds = flow.run_local_server(port=2020)
+            auth_url, _ = flow.authorization_url(access_type='offline', include_granted_scopes='true')
+            return None, auth_url
+        # creds = flow.run_local_server(port=2020)
 
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
+        # with open("token.json", "w") as token:
+        #     token.write(creds.to_json())
 
     try:
         drive_service = build("drive", "v3", credentials=creds)
         people_service = build("people", "v1", credentials=creds)
         
-        return drive_service, people_service
+        return drive_service, people_service, None #new
 
     except HttpError as error:
         print(f"An error occurred: {error}")
+        return None, None #new
     
     
 def get_user_info(people_service):
