@@ -34,13 +34,12 @@ export default function Dashboard() {
 
   const handleLoginClick = async () => {
     try {
-      const response = await fetch(
-        "https://cipher-vault-server.vercel.app/login",
-        {
-          // const response = await fetch("http://127.0.0.1:8080/login", {
-          method: "GET",
-        }
-      );
+      // const response = await fetch(
+      //   "https://cipher-vault-server.vercel.app/login",
+      //   {
+      const response = await fetch("http://127.0.0.1:8080/login", {
+        method: "GET",
+      });
 
       const jsonData = await response.json();
 
@@ -65,13 +64,12 @@ export default function Dashboard() {
 
   const handleLogoutClick = async () => {
     try {
-      const response = await fetch(
-        "https://cipher-vault-server.vercel.app/logout",
-        {
-          // const response = await fetch("http://127.0.0.1:8080/logout", {
-          method: "GET",
-        }
-      );
+      // const response = await fetch(
+      //   "https://cipher-vault-server.vercel.app/logout",
+      //   {
+      const response = await fetch("http://127.0.0.1:8080/logout", {
+        method: "GET",
+      });
       if (response.ok) {
         setIsSignedIn(false);
         setShowFiles(false);

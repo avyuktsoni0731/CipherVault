@@ -7,6 +7,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import Flow
 
 from googleapiclient.errors import HttpError
 
@@ -38,24 +39,20 @@ def auth():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
-            auth_url, _ = flow.authorization_url(access_type='offline', include_granted_scopes='true')
-            return None, auth_url
-        # creds = flow.run_local_server(port=2020)
+        creds = flow.run_local_server(port=2020)
 
-        # with open("token.json", "w") as token:
-        #     token.write(creds.to_json())
+        with open("token.json", "w") as token:
+            token.write(creds.to_json())
 
     try:
         drive_service = build("drive", "v3", credentials=creds)
         people_service = build("people", "v1", credentials=creds)
         
-        return drive_service, people_service, None #new
+        return drive_service, people_service
 
     except HttpError as error:
         print(f"An error occurred: {error}")
-        return None, None #new
-    
-    
+       
 def get_user_info(people_service):
     try:
         profile = people_service.people().get(resourceName='people/me', personFields='names,emailAddresses,photos').execute()
