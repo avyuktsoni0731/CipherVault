@@ -33,17 +33,16 @@ export default function PasswordModal({
       password: encodeURIComponent(inputValue.trim()),
     };
     try {
-      const response = await fetch(
-        "https://ciphervault-4l9d.onrender.com/check-password",
-        {
-          // const response = await fetch("http://127.0.0.1:8080/check-password", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      // const response = await fetch(
+      //   "https://ciphervault-4l9d.onrender.com/check-password",
+      //   {
+      const response = await fetch("http://127.0.0.1:8080/check-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       if (!response.ok) {
         throw new Error("Password verification failed");
       }

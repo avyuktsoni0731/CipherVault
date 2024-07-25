@@ -19,10 +19,10 @@ export function Files() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        "https://ciphervault-4l9d.onrender.com/api/data"
-      );
-      // const response = await fetch("http://127.0.0.1:8080/api/data");
+      // const response = await fetch(
+      //   "https://ciphervault-4l9d.onrender.com/api/data"
+      // );
+      const response = await fetch("http://127.0.0.1:8080/api/data");
 
       const jsonData = await response.json();
       console.log(jsonData);
