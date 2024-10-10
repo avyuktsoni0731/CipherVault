@@ -44,13 +44,16 @@ export function Files() {
   // };
   const fetchData = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8080/api/data", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://cipher-vault-server.vercel.app/api/data",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         const jsonData = await response.json();

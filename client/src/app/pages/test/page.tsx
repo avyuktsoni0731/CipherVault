@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 
 const fetchUserInfo = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8080/api/user_info", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "https://cipher-vault-server.vercel.app/api/user_info",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

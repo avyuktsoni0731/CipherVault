@@ -176,10 +176,14 @@ export default function Dashboard() {
   // };
   const handleLogoutClick = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8080/logout", {
-        method: "GET",
-        credentials: "include",
-      });
+      // const response = await fetch("http://127.0.0.1:8080/logout", {
+      const response = await fetch(
+        "https://cipher-vault-server.vercel.app/logout",
+        {
+          method: "GET",
+          credentials: "include",
+        }
+      );
       if (response.ok) {
         setIsSignedIn(false);
         setShowFiles(false);
