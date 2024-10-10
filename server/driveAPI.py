@@ -43,10 +43,18 @@ def get_client_config():
 #             creds.refresh(Request())
 #         else:
 #             flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
-#         creds = flow.run_local_server(port=2020)
+#         # creds = flow.run_local_server(port=2020)
+#             flow.redirect_uri = url_for('oauth2callback', _external=True)
+            
+#             # Create the authorization URL to redirect the user to Google's consent screen
+#             authorization_url, state = flow.authorization_url(
+#                 access_type='offline', include_granted_scopes='true'
+#             )
+#             session['state'] = state
+#             return redirect(authorization_url)
 
-#         with open("token.json", "w") as token:
-#             token.write(creds.to_json())
+#         # with open("token.json", "w") as token:
+#         #     token.write(creds.to_json())
 
 #     try:
 #         drive_service = build("drive", "v3", credentials=creds)
@@ -58,34 +66,68 @@ def get_client_config():
 #         print(f"An error occurred: {error}")
 #         return None
      
-
+     
+# Authentication and credential handling
 def auth():
     creds = None
     client_config = get_client_config()
 
-    if os.path.exists("token.json"):
-        creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+    # Check if credentials are available in session
+    if 'credentials' in session:
+        creds = Credentials(**session['credentials'])
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
+            # Initiate OAuth 2.0 Flow
             flow = Flow.from_client_config(client_config, SCOPES)
-            # Replace 'http://localhost:2020' with your redirect URI (registered in Google Cloud Console)
-            flow = flow.to_web_app(redirect_uri='https://cipher-vault-server.vercel.app/login')
-            auth_url, _ = flow.authorization_url()
-
-            # User needs to be redirected to this URL for authorization
-            return redirect(auth_url)
+            flow.redirect_uri = url_for('oauth2callback', _external=True)
+            
+            # Generate the authorization URL and save state in the session
+            authorization_url, state = flow.authorization_url(
+                access_type='offline',
+                include_granted_scopes='true'
+            )
+            session['state'] = state
+            return redirect(authorization_url)
 
     try:
+        # Build the Google Drive and People API services
         drive_service = build("drive", "v3", credentials=creds)
         people_service = build("people", "v1", credentials=creds)
+
         return drive_service, people_service
 
     except HttpError as error:
         print(f"An error occurred: {error}")
         return None
+
+# OAuth callback to handle the token exchange
+def oauth2callback():
+    state = session['state']
+    client_config = get_client_config()
+    
+    # Handle the OAuth flow and exchange authorization code for credentials
+    flow = Flow.from_client_config(client_config, SCOPES, state=state)
+    flow.redirect_uri = url_for('oauth2callback', _external=True)
+
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+
+    # Store the credentials in the session for future requests
+    creds = flow.credentials
+    session['credentials'] = {
+        'token': creds.token,
+        'refresh_token': creds.refresh_token,
+        'token_uri': creds.token_uri,
+        'client_id': creds.client_id,
+        'client_secret': creds.client_secret,
+        'scopes': creds.scopes
+    }
+
+    return redirect(url_for('get_data'))  # Redirect after successful login
+
 
 def get_user_info(people_service):
     try:
@@ -101,28 +143,49 @@ def get_user_info(people_service):
         return None
         
 
-def revoke():
-    if os.path.exists("token.json"):
-        with open("token.json", "r") as token_file:
-            creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+# def revoke():
+#     if os.path.exists("token.json"):
+#         with open("token.json", "r") as token_file:
+#             creds = Credentials.from_authorized_user_file("token.json", SCOPES)
         
+#         # Revoke the token
+#         revoke = requests.post(
+#             'https://oauth2.googleapis.com/revoke',
+#             params={'token': creds.token},
+#             headers={'content-type': 'application/x-www-form-urlencoded'}
+#         )
+
+#         if revoke.status_code == 200:
+#             os.remove("token.json")
+#             return jsonify({'status': 'success'}), 200
+#             # print('Token successfully revoked')
+#         else:
+#             return jsonify({'status': 'error', 'message': 'Failed to revoke token'}), 500
+        
+#     else:
+#         return jsonify({'status': 'error', 'message': 'Token file not found'}), 404
+    
+# Revoke OAuth credentials
+def revoke():
+    if 'credentials' in session:
+        creds = Credentials(**session['credentials'])
+
         # Revoke the token
-        revoke = requests.post(
+        revoke_response = requests.post(
             'https://oauth2.googleapis.com/revoke',
             params={'token': creds.token},
             headers={'content-type': 'application/x-www-form-urlencoded'}
         )
 
-        if revoke.status_code == 200:
-            os.remove("token.json")
+        if revoke_response.status_code == 200:
+            session.clear()  # Clear the session after successful token revocation
             return jsonify({'status': 'success'}), 200
-            # print('Token successfully revoked')
         else:
             return jsonify({'status': 'error', 'message': 'Failed to revoke token'}), 500
-        
     else:
-        return jsonify({'status': 'error', 'message': 'Token file not found'}), 404
-    
+        return jsonify({'status': 'error', 'message': 'Credentials not found in session'}), 404
+
+
 
 if __name__ == "__main__":
     print(auth()[0])
