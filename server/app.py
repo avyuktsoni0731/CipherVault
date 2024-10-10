@@ -29,33 +29,33 @@ def hello():
     return jsonify("helloworld")
 
 
-# @app.route("/login", methods=["GET", "POST"])
-# def login():
-#     try:
-#         auth()[0]
-#         people_service = auth()[1]
-#         user_info = get_user_info(people_service)
-#         # session['user_info'] = user_info
-#         return jsonify({'status': 'success', 'user_info': user_info}), 200
-#     except Exception as e:
-#         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     try:
-        return auth()  # Now this will redirect for OAuth login if needed
+        auth()[0]
+        people_service = auth()[1]
+        user_info = get_user_info(people_service)
+        # session['user_info'] = user_info
+        return jsonify({'status': 'success', 'user_info': user_info}), 200
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+# @app.route("/login", methods=["GET", "POST"])
+# def login():
+#     try:
+#         return auth()  # Now this will redirect for OAuth login if needed
+#     except Exception as e:
+#         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-# New route to handle OAuth callback after the user grants permission
-@app.route("/oauth2callback")
-def oauth2callback():
-    try:
-        # Handles the callback from the Google OAuth flow and stores credentials
-        return auth()
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# # New route to handle OAuth callback after the user grants permission
+# @app.route("/oauth2callback")
+# def oauth2callback():
+#     try:
+#         # Handles the callback from the Google OAuth flow and stores credentials
+#         return auth()
+#     except Exception as e:
+#         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route("/logout", methods=["GET", "POST"])
 def logout():
