@@ -22,65 +22,172 @@ export default function Dashboard() {
   const [showFiles, setShowFiles] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-  useEffect(() => {
-    const signedIn = localStorage.getItem("isSignedIn");
-    if (signedIn === "true") {
-      setIsSignedIn(true);
-      setShowFiles(true);
-      setProfilePicture(localStorage.getItem("profilePicture"));
-      setUserName(localStorage.getItem("userName"));
+  // useEffect(() => {
+  //   const signedIn = localStorage.getItem("isSignedIn");
+  //   if (signedIn === "true") {
+  //     setIsSignedIn(true);
+  //     setShowFiles(true);
+  //     setProfilePicture(localStorage.getItem("profilePicture"));
+  //     setUserName(localStorage.getItem("userName"));
+  //   }
+  // }, []);
+
+  // const handleLoginClick = async () => {
+  //   try {
+  //     // const response = await fetch(
+  //     //   "https://cipher-vault-server.vercel.app/login",
+  //     //   {
+  //     const response = await fetch("http://127.0.0.1:8080/login", {
+  //       method: "GET",
+  //     });
+
+  //     const jsonData = await response.json();
+
+  //     if (response.ok) {
+  //       setIsSignedIn(true);
+  //       setShowFiles(true);
+  //       localStorage.setItem("isSignedIn", "true");
+  //       console.log("logged in");
+  //       localStorage.setItem(
+  //         "profilePicture",
+  //         jsonData.user_info.profile_picture
+  //       );
+  //       localStorage.setItem("userName", jsonData.user_info.name);
+  //       window.location.reload();
+  //     } else {
+  //       console.log("login failed");
+  //     }
+  //   } catch (error) {
+  //     console.error("error logging in:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const fetchUserInfo = async () => {
+  //     try {
+  //       const response = await fetch("http://127.0.0.1:8080/api/user_info", {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           // Include authentication header if needed
+  //           // "Authorization": "Bearer YOUR_ACCESS_TOKEN",
+  //         },
+  //         credentials: "include", // Ensure cookies are sent with the request
+  //       });
+
+  //       if (response.ok) {
+  //         const jsonData = await response.json();
+  //         console.log(jsonData);
+  //         setIsSignedIn(true);
+  //         setProfilePicture(jsonData.user_info.profile_picture);
+  //         setUserName(jsonData.user_info.name);
+  //         setShowFiles(true);
+  //       } else {
+  //         console.error(
+  //           "Error fetching user info:",
+  //           response.status,
+  //           response.statusText
+  //         );
+  //         setIsSignedIn(false);
+  //         setShowFiles(false);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching user info:", error);
+  //       setIsSignedIn(false);
+  //       setShowFiles(false);
+  //     }
+  //   };
+
+  //   fetchUserInfo();
+  // }, []);
+
+  // useEffect(() => {
+  const fetchUserInfo = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:8080/api/user_info", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Ensure cookies are sent with the request
+      });
+
+      if (response.ok) {
+        const jsonData = await response.json();
+        console.log(jsonData);
+        setIsSignedIn(true);
+        setProfilePicture(jsonData.user_info.profile_picture);
+        setUserName(jsonData.user_info.name);
+        setShowFiles(true);
+      } else {
+        console.error(
+          "Error fetching user info:",
+          response.status,
+          response.statusText
+        );
+        setIsSignedIn(false);
+        setShowFiles(false);
+      }
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      setIsSignedIn(false);
+      setShowFiles(false);
     }
+  };
+  // });
+  useEffect(() => {
+    fetchUserInfo();
   }, []);
 
   const handleLoginClick = async () => {
     try {
-      // const response = await fetch(
-      //   "https://cipher-vault-server.vercel.app/login",
-      //   {
-      const response = await fetch("http://127.0.0.1:8080/login", {
-        method: "GET",
-      });
-
-      const jsonData = await response.json();
-
-      if (response.ok) {
-        setIsSignedIn(true);
-        setShowFiles(true);
-        localStorage.setItem("isSignedIn", "true");
-        console.log("logged in");
-        localStorage.setItem(
-          "profilePicture",
-          jsonData.user_info.profile_picture
-        );
-        localStorage.setItem("userName", jsonData.user_info.name);
-        window.location.reload();
-      } else {
-        console.log("login failed");
-      }
+      // Initiate OAuth login process
+      window.location.href = "http://127.0.0.1:8080/login";
     } catch (error) {
-      console.error("error logging in:", error);
+      console.error("Error logging in:", error);
     }
   };
 
+  // const handleLogoutClick = async () => {
+  //   try {
+  //     // const response = await fetch(
+  //     //   "https://cipher-vault-server.vercel.app/logout",
+  //     //   {
+  //     const response = await fetch("http://127.0.0.1:8080/logout", {
+  //       method: "GET",
+  //     });
+  //     if (response.ok) {
+  //       setIsSignedIn(false);
+  //       setShowFiles(false);
+  //       localStorage.removeItem("isSignedIn");
+  //       console.log("logged out");
+  //       window.location.reload();
+  //     } else {
+  //       console.log("login failed");
+  //     }
+  //   } catch (error) {
+  //     console.error("error logging out:", error);
+  //   }
+  // };
   const handleLogoutClick = async () => {
     try {
-      // const response = await fetch(
-      //   "https://cipher-vault-server.vercel.app/logout",
-      //   {
       const response = await fetch("http://127.0.0.1:8080/logout", {
         method: "GET",
+        credentials: "include",
       });
       if (response.ok) {
         setIsSignedIn(false);
         setShowFiles(false);
+        setProfilePicture("");
+        setUserName("");
         localStorage.removeItem("isSignedIn");
-        console.log("logged out");
-        window.location.reload();
+        localStorage.removeItem("profilePicture");
+        localStorage.removeItem("userName");
       } else {
-        console.log("login failed");
+        console.log("Logout failed");
       }
     } catch (error) {
-      console.error("error logging out:", error);
+      console.error("Error logging out:", error);
     }
   };
 
@@ -130,16 +237,6 @@ export default function Dashboard() {
             <h1 className="font-semibold text-lg">My Files</h1>
           </div>
           <div className="flex flex-1/4 items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-            {/* <form className="ml-auto flex-1 sm:flex-initial">
-              <div className="relative">
-                <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search files..."
-                  className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-                />
-              </div>
-            </form> */}
             <Button
               variant="outline"
               onClick={() => setIsUploadModalOpen(true)}

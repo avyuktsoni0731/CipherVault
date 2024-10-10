@@ -1,11 +1,15 @@
 from driveAPI import auth
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
+from google.oauth2.credentials import Credentials
+from flask import session
+from googleapiclient.discovery import build
 import tempfile
 from werkzeug.utils import secure_filename
 import io, os
 
 class driveFunctions():
 
+    @staticmethod
     def list_files():
         
         service = auth()[0]
@@ -26,6 +30,7 @@ class driveFunctions():
                 files_info.append(file_info)
         return files_info
     
+    @staticmethod
     def search_files_by_name(file_name):
     
         service = auth()[0]
@@ -35,7 +40,7 @@ class driveFunctions():
         file_ids = [file['id'] for file in files]
         return file_ids[0]
     
-    
+    @staticmethod
     def download_file_from_drive(file_id, file_name):
     
         service = auth()[0]
@@ -48,8 +53,6 @@ class driveFunctions():
         
         temp_file_path = os.path.join(temp_dir, sec_filename)
         ##
-        
-        # download_path = str(Path.home() / "Downloads")
 
         with open(temp_file_path, 'wb') as f:
             downloader = MediaIoBaseDownload(f, request)
@@ -60,7 +63,7 @@ class driveFunctions():
         # print(temp_file_path)
         return temp_file_path
 
-
+    @staticmethod
     def upload_file_to_drive(file_path, file_name):
         service = auth()[0]
 
@@ -72,7 +75,7 @@ class driveFunctions():
         file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
         print('File ID:', file.get('id'))
         
-        
+    @staticmethod  
     def delete_file(file_name):
         
         file_id = driveFunctions.search_files_by_name(file_name)

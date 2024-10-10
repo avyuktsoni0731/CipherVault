@@ -17,18 +17,53 @@ export function Files() {
     fetchData();
   }, []);
 
+  // const fetchData = async () => {
+  //   try {
+  //     // const response = await fetch(
+  //     //   "https://ciphervault-4l9d.onrender.com/api/data"
+  //     // );
+  //     const response = await fetch("http://127.0.0.1:8080/api/data", {
+  //       method: "GET",
+  //       credentials: "include",
+  //     });
+
+  //     if (response.ok) {
+  //       const jsonData = await response.json();
+  //       console.log(jsonData);
+  //       setData(jsonData);
+  //     } else {
+  //       console.error(
+  //         "Error fetching data:",
+  //         response.status,
+  //         response.statusText
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
   const fetchData = async () => {
     try {
-      // const response = await fetch(
-      //   "https://ciphervault-4l9d.onrender.com/api/data"
-      // );
-      const response = await fetch("http://127.0.0.1:8080/api/data");
+      const response = await fetch("http://127.0.0.1:8080/api/data", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-      const jsonData = await response.json();
-      console.log(jsonData);
-      setData(jsonData);
+      if (response.ok) {
+        const jsonData = await response.json();
+        setData(jsonData);
+      } else {
+        console.error(
+          "Error fetching files data:",
+          response.status,
+          response.statusText
+        );
+      }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching files data:", error);
     }
   };
 

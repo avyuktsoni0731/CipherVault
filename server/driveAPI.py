@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, redirect, url_for, request, session
 import os.path
 import requests
 from dotenv import load_dotenv
@@ -13,12 +13,9 @@ from googleapiclient.errors import HttpError
 
 SCOPES = ["https://www.googleapis.com/auth/drive", 'https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', "openid"]
 
-def auth():
+def get_client_config():
     load_dotenv()
-
-    creds = None
-    
-    client_config = {
+    return {
         "web": {
             "client_id": os.getenv("CLIENT_ID"),
             "project_id": os.getenv("PROJECT_ID"),
@@ -31,6 +28,41 @@ def auth():
         }
     }
 
+
+# def auth():
+
+#     creds = None
+#     client_config = get_client_config()
+    
+
+#     if os.path.exists("token.json"):
+#         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
+
+#     if not creds or not creds.valid:
+#         if creds and creds.expired and creds.refresh_token:
+#             creds.refresh(Request())
+#         else:
+#             flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
+#         creds = flow.run_local_server(port=2020)
+
+#         with open("token.json", "w") as token:
+#             token.write(creds.to_json())
+
+#     try:
+#         drive_service = build("drive", "v3", credentials=creds)
+#         people_service = build("people", "v1", credentials=creds)
+        
+#         return drive_service, people_service
+
+#     except HttpError as error:
+#         print(f"An error occurred: {error}")
+#         return None
+     
+
+def auth():
+    creds = None
+    client_config = get_client_config()
+
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
 
@@ -38,21 +70,23 @@ def auth():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_config(client_config, SCOPES)
-        creds = flow.run_local_server(port=2020)
+            flow = Flow.from_client_config(client_config, SCOPES)
+            # Replace 'http://localhost:2020' with your redirect URI (registered in Google Cloud Console)
+            flow = flow.to_web_app(redirect_uri='http://localhost:2020')
+            auth_url, _ = flow.authorization_url()
 
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
+            # User needs to be redirected to this URL for authorization
+            return redirect(auth_url)
 
     try:
         drive_service = build("drive", "v3", credentials=creds)
         people_service = build("people", "v1", credentials=creds)
-        
         return drive_service, people_service
 
     except HttpError as error:
         print(f"An error occurred: {error}")
-       
+        return None
+
 def get_user_info(people_service):
     try:
         profile = people_service.people().get(resourceName='people/me', personFields='names,emailAddresses,photos').execute()
@@ -90,14 +124,5 @@ def revoke():
         return jsonify({'status': 'error', 'message': 'Token file not found'}), 404
     
 
-
-def fxn():
-    try:
-        drive_service, people_service = auth()
-        user_info = get_user_info(people_service)
-        print(user_info)
-    except Exception as e:
-        print(f"An error occured: {e}")
-        
 if __name__ == "__main__":
     print(auth()[0])

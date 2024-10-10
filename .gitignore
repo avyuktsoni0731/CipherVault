@@ -135,4 +135,6 @@ server/encryptor/__pycache__
 server/gdrive/__pycache__
 server/token.json
 server/test-data
+server/flask_session
 .DS_Store
+.venv
