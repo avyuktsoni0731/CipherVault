@@ -72,7 +72,7 @@ def auth():
         else:
             flow = Flow.from_client_config(client_config, SCOPES)
             # Replace 'http://localhost:2020' with your redirect URI (registered in Google Cloud Console)
-            flow = flow.to_web_app(redirect_uri='http://localhost:2020')
+            flow = flow.to_web_app(redirect_uri='https://cipher-vault-server.vercel.app/login')
             auth_url, _ = flow.authorization_url()
 
             # User needs to be redirected to this URL for authorization
