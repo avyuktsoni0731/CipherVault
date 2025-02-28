@@ -104,17 +104,16 @@ export default function Dashboard() {
   // useEffect(() => {
   const fetchUserInfo = async () => {
     try {
-      const response = await fetch(
-        "https://cipher-vault-server.vercel.app/api/user_info",
-        {
-          // const response = await fetch("http://127.0.0.1:8080/api/user_info", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // Ensure cookies are sent with the request
-        }
-      );
+      // const response = await fetch(
+      //   "https://cipher-vault-server.vercel.app/api/user_info",
+      //   {
+      const response = await fetch("http://127.0.0.1:8080/api/user_info", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Ensure cookies are sent with the request
+      });
 
       if (response.ok) {
         const jsonData = await response.json();
@@ -146,8 +145,8 @@ export default function Dashboard() {
   const handleLoginClick = async () => {
     try {
       // Initiate OAuth login process
-      window.location.href = "https://cipher-vault-server.vercel.app/login";
-      // window.location.href = "http://127.0.0.1:8080/login";
+      // window.location.href = "https://cipher-vault-server.vercel.app/login";
+      window.location.href = "http://127.0.0.1:8080/login";
     } catch (error) {
       console.error("Error logging in:", error);
     }
